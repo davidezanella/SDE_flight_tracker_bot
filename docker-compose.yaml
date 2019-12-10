@@ -1,0 +1,8 @@
+version: '3'
+services:
+#process layer
+  telegram_wrapper:
+    build: ./process_services_layer/telegram_wrapper
+    ports:
+    - "5000:80"
+
