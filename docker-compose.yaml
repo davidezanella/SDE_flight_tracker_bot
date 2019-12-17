@@ -15,6 +15,16 @@ services:
   route_adapter:
     build: ./adapter_services_layer/route_adapter
     ports:
-    - "5100:80"
+    - "5200:80"
+
+  user_adapter:
+    build: ./adapter_services_layer/user_adapter
+    ports:
+    - "5201:80"
 
   #data layer
+
+  user_db:
+    build: ./data_services_layer/user_db
+    ports:
+    - "5300:5432"
