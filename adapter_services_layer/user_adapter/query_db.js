@@ -15,9 +15,18 @@ async function getUsers() {
     return await makeQuery(qry);
 }
 async function addUser(id, username, firstName, lastName, chatId) {
-    //TODO: check if all params are presnt
-    let qry = `INSERT INTO users(id, username, firstName, lastName, chatId) VALUES 
-        (${id}, '${username}', '${firstName}', '${lastName}', ${chatId}) RETURNING *`;
+    let columns = ['id', 'username', 'firstName', 'chatId'];
+    let values = [`${id}`, `'${username}'`, `'${firstName}'`, `${chatId}`];
+    if(lastName !== undefined){
+        columns.push('lastName');
+        values.push(`'${lastName}'`);
+    }
+
+    columns = columns.join();
+    values = values.join();
+
+    let qry = `INSERT INTO users(${columns}) VALUES 
+        (${values}) RETURNING *`;
     return (await makeQuery(qry))[0];
 }
 
@@ -27,9 +36,11 @@ async function getUser(id) {
     return (await makeQuery(qry))[0];
 }
 async function updateUser(id, username, firstName, lastName, chatId) {
-    //TODO: check if all params are presnt
+    let lastName_set = "";
+    if(lastName !== undefined)
+        lastName_set = `, lastName = '${lastName}'`;
     let qry = `UPDATE users SET username = '${username}', firstName = '${firstName}', 
-        lastName = '${lastName}', chatId = ${chatId} WHERE id = ${id} RETURNING *`;
+        chatId = ${chatId}${lastName_set} WHERE id = ${id} RETURNING *`;
     return (await makeQuery(qry))[0];
 }
 async function deleteUser(id) {
