@@ -19,7 +19,7 @@ app.post('/users', async (req, res) => {
     let chatId = req.body.chatId;
 
     if(id === undefined || username === undefined || firstName === undefined || chatId === undefined)
-        res.status(400).send("Missing one or more required parameters!");        
+        res.status(400).json({"err": "Missing one or more required parameters!"});        
     else {
         let response = await db.addUser(id, username, firstName, lastName, chatId);
         res.status(201).json(response);
@@ -30,8 +30,11 @@ app.post('/users', async (req, res) => {
 
 app.get('/users/:id', async (req, res) => {
     let id = req.params.id;
-
-    res.status(200).json(await db.getUser(id));
+    let result = await db.getUser(id);
+    if(result !== undefined)
+        res.status(200).json(result);
+    else
+        res.status(404)
 });
 app.put('/users/:id', async (req, res) => {
     let id = req.params.id;
@@ -41,7 +44,7 @@ app.put('/users/:id', async (req, res) => {
     let chatId = req.body.chatId;
 
     if(username === undefined || firstName === undefined || chatId === undefined)
-        res.status(400).send("Missing one or more required parameters!");        
+        res.status(400).json({"err": "Missing one or more required parameters!"});        
     else
         res.status(200).json(await db.updateUser(id, username, firstName, lastName, chatId));
 });
