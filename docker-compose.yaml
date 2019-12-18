@@ -6,6 +6,11 @@ services:
     build: ./process_services_layer/telegram_wrapper
     ports:
     - "5000:80"
+  
+  register_user:
+    build: ./process_services_layer/register_user
+    ports:
+    - "5001:80"
 
   #business layer
 
