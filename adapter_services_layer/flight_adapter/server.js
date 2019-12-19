@@ -10,22 +10,38 @@ const KEY = process.env.KEY;
 const SECRET = process.env.SECRET;
 
 
-app.get('/flights/:airport/', async (req, res) => {
+app.get('/flights/:airport', async (req, res) => {
   let airport = req.params.airport;
-
-  //TODO: add check on param for valid airport code
 
   let datetime = moment().format('YYYY-MM-DDTHH:mm');
 
   let access_token = await lh_api.getAccessToken(KEY, SECRET);
-  let results = await lh_api.searchFlight(access_token, airport, datetime);
-  let flights = results.FlightStatusResource.Flights.Flight.map(f => formatLhFlight(f));
-  
-  res.status(200).json(flights);
+  try {
+    let results = await lh_api.searchFlight(access_token, airport, datetime);
+    let flights = results.FlightStatusResource.Flights.Flight.map(f => formatLhFlight(f));
+    
+    res.status(200).json(flights);
+  }
+  catch {
+    res.status(400).json({'err': 'Invalid airport number!'});
+  }
 });
 
-app.get('/flights/:id', async (req, res) => {
-  
+app.get('/flights/:number', async (req, res) => {
+  let number = req.params.number;
+
+  let date = moment().format('YYYY-MM-DD');
+
+  let access_token = await lh_api.getAccessToken(KEY, SECRET);
+  try {
+    let results = await lh_api.flightStatus(access_token, number, date);
+    let flight = formatLhFlight(results.FlightStatusResource.Flights.Flight[0]);
+    
+    res.status(200).json(flight);
+  }
+  catch {
+    res.status(400).json({'err': 'Invalid flight number!'});
+  }
 });
 
 function formatLhFlight(flight) {

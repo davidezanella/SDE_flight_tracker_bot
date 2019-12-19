@@ -39,7 +39,22 @@ async function searchFlight(access_token, destAirportCode, fromDate) {
     return await res.json();
 }
 
+async function flightStatus(access_token, flightNumber, date) {
+    let searchUrl = urlFlightStatus + `/${flightNumber}/${date}`;
+
+    let res = await fetch(searchUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
+        }
+    });
+
+    return await res.json();
+}
+
 module.exports = {
     getAccessToken,
-    searchFlight
+    searchFlight,
+    flightStatus
 }
