@@ -3,6 +3,7 @@ const qs = require('query-string');
 
 const url = "https://api.lufthansa.com/v1/";
 const urlFlightStatus = url + "operations/flightstatus";
+const urlAirports = url + "mds-references/airports";
 
 async function getAccessToken(key, secret) {
     let authUrl = url + 'oauth/token';
@@ -53,8 +54,23 @@ async function flightStatus(access_token, flightNumber, date) {
     return await res.json();
 }
 
+async function getAirport(access_token, airportCode) {
+    let searchUrl = urlAirports + `/${airportCode}`;
+
+    let res = await fetch(searchUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
+        }
+    });
+
+    return await res.json();
+}
+
 module.exports = {
     getAccessToken,
     searchFlight,
-    flightStatus
+    flightStatus,
+    getAirport
 }

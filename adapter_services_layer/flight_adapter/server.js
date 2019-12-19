@@ -22,7 +22,7 @@ app.get('/flights/:airport', async (req, res) => {
     
     res.status(200).json(flights);
   }
-  catch {
+  catch (e) {
     res.status(400).json({'err': 'Invalid airport number!'});
   }
 });
@@ -39,8 +39,29 @@ app.get('/flights/:number', async (req, res) => {
     
     res.status(200).json(flight);
   }
-  catch {
+  catch (e) {
     res.status(400).json({'err': 'Invalid flight number!'});
+  }
+});
+
+app.get('/airports/:number', async (req, res) => {
+  let number = req.params.number;
+
+  let access_token = await lh_api.getAccessToken(KEY, SECRET);
+  try {
+    let results = await lh_api.getAirport(access_token, number);
+    let airport = results.AirportResource.Airports.Airport;
+    
+    airport = {
+      'name': airport.Names.Name['$'],
+      'latitude': airport.Position.Coordinate.Latitude,
+      'longitude': airport.Position.Coordinate.Longitude
+    }
+
+    res.status(200).json(airport);
+  }
+  catch (e) {
+    res.status(404).json({'err': 'Airport not found!'});
   }
 });
 
