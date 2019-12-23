@@ -32,6 +32,11 @@ services:
     ports:
     - "5202:80"
 
+  user-flight_adapter:
+    build: ./adapter_services_layer/user-flight_adapter
+    ports:
+    - "5203:80"
+
   #data layer
 
   user_db:
