@@ -18,7 +18,10 @@ app.get('/flights/airports/:airport', async (req, res) => {
   let access_token = await lh_api.getAccessToken(KEY, SECRET);
   try {
     let results = await lh_api.searchFlight(access_token, airport, datetime);
-    let flights = results.FlightStatusResource.Flights.Flight.map(f => formatLhFlight(f));
+    let flights = [];
+
+    if (results.FlightStatusResource !== undefined)
+      flights = results.FlightStatusResource.Flights.Flight.map(f => formatLhFlight(f));
     
     res.status(200).json(flights);
   }
