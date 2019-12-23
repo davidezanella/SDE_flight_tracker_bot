@@ -21,7 +21,8 @@ def find(airport):
 
     if user_id is not None and user_exists(user_id):
         r = requests.get(url_search_flight + 'flights/' + airport)
-        return jsonify(r.json()), r.status_code
+        resp = r.json() if r.status_code == 200 else {'error': 'Invalid airport!'}
+        return jsonify(resp), r.status_code
     else:
         return jsonify({"error": "Not a valid user!"}), 401
 

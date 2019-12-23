@@ -23,7 +23,7 @@ namespace register_flight_user.Controllers
         }
 
         string urlFlight = "http://flight_adapter/";
-        string urlUserFlightAdapter = "http://user-flight_adapter/";
+        string urlUserFlightAdapter = "http://user-flight_adapter/flight-users";
 
         [HttpPost]
         public async Task<IActionResult> Insert(UserFlight uf)

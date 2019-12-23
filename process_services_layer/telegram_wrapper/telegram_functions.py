@@ -3,8 +3,9 @@ from datetime import datetime
 from telegram.ext import CommandHandler, Updater, MessageHandler, Filters
 
 
-register_user = 'http://register_user/register'
-flight_finder = 'http://flight_finder/find/'
+register_user_url = 'http://register_user/register'
+flight_finder_url = 'http://flight_finder/find/'
+track_flight_url = 'http://track_flight/track'
 
 
 def start(update, context):
@@ -19,7 +20,7 @@ def start(update, context):
     context.bot.send_message(chat_id=user['chatId'], text="Hi {}! I'll help you tracking flights!".format(user['firstName']))
 
     #register user and chat
-    r = requests.post(register_user, json=user)
+    r = requests.post(register_user_url, json=user)
     assert r.status_code == 200
 
 
@@ -29,7 +30,7 @@ def find_by_arr_airport(update, context):
     else:
         airport = context.args[0]
         header = { 'Authorization': str(update.message.from_user.id) }
-        r = requests.get(flight_finder + airport, headers=header)
+        r = requests.get(flight_finder_url + airport, headers=header)
         if r.status_code == 200:
             flights = r.json()
             msg = "Flights found:\n\n"
@@ -48,6 +49,34 @@ def find_by_arr_airport(update, context):
     context.bot.send_message(parse_mode='Markdown', chat_id=update.effective_chat.id, text=msg)
 
 
+def track_flight(update, context):
+    if len(context.args) == 0:
+        msg = 'You should give me a number of a flight'
+    else:
+        flight = context.args[0]
+        header = { 'Authorization': str(update.message.from_user.id) }
+        data = {
+            'flightNumber': flight
+        }
+        r = requests.post(track_flight_url, headers=header, json=data)
+        if r.status_code == 201:
+            msg = "You will receive some news when the info about the flight will change.\nSend me your live location to let me help you arrive at the destination airport in time."
+        else:
+            msg = "Something wrong!"
+
+    context.bot.send_message(parse_mode='Markdown', chat_id=update.effective_chat.id, text=msg)
+
+
+def location(update, context):
+    message = None
+    if update.edited_message:
+        message = update.edited_message
+    else:
+        message = update.message
+    lat, lon = message.location.latitude, message.location.longitude
+    print(lat, flush=True)
+
+
 def unknown(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, I didn't understand that command.")
 
@@ -64,6 +93,12 @@ def init_bot():
 
     find_handler = CommandHandler('find', find_by_arr_airport)
     dispatcher.add_handler(find_handler)
+
+    track_handler = CommandHandler('track', track_flight)
+    dispatcher.add_handler(track_handler)
+
+    location_handler = MessageHandler(Filters.location, location)
+    dispatcher.add_handler(location_handler)
 
     unknown_handler = MessageHandler(Filters.command, unknown)
     dispatcher.add_handler(unknown_handler)

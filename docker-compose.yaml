@@ -17,6 +17,11 @@ services:
     ports:
     - "5002:80"
 
+  track_flight:
+    build: ./process_services_layer/track_flight
+    ports:
+    - "5003:80"
+
   #business layer
 
   search_flight:
