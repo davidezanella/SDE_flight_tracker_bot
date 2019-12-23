@@ -14,6 +14,10 @@ services:
 
   #business layer
 
+  search_flight:
+    build: ./business_services_layer/search_flight
+    ports:
+    - "5100:80"
 
   #adapters layer
 
