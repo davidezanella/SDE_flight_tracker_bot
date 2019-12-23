@@ -34,7 +34,7 @@ app.get('/users/:id', async (req, res) => {
     if(result !== undefined)
         res.status(200).json(result);
     else
-        res.status(404)
+        res.sendStatus(404);
 });
 app.put('/users/:id', async (req, res) => {
     let id = req.params.id;

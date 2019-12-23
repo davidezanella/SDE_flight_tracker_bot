@@ -46,7 +46,7 @@ app.get('/', async (req, res) => {
     }
   }
   else {
-    res.status(response.status);
+    res.sendStatus(response.status);
   }
 });
 

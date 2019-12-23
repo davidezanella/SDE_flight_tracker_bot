@@ -27,7 +27,7 @@ app.post('/flight-users', async (req, res) => {
         res.status(201).json(relation);
     }
     else {
-        res.status(400);
+        res.sendStatus(400);
     }
 });
 
@@ -42,7 +42,7 @@ app.get('/flight-users/:userid/:flightnumber', async (req, res) => {
     };
 
     if (!UF_RELATIONS.includes(relation))
-        res.status(404)
+        res.sendStatus(404)
     else {
         //get user and flight info
         let user = await api.getUser(userId);
@@ -65,7 +65,7 @@ app.delete('/flight-users/:userid/:flightnumber', async (req, res) => {
     };
 
     if (!UF_RELATIONS.includes(relation))
-        res.status(400)
+        res.sendStatus(400)
     else {
         UF_RELATIONS.splice(UF_RELATIONS.indexOf(relation), 1);
         res.status(200).json(relation);
