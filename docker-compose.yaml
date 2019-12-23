@@ -19,6 +19,11 @@ services:
     ports:
     - "5100:80"
 
+  register_flight-user:
+    build: ./business_services_layer/register_flight-user
+    ports:
+    - "5101:80"
+
   #adapters layer
 
   route_adapter:
