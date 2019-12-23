@@ -16,12 +16,12 @@ url_search_flight = 'http://search_flight/'
 
 
 @app.route("/find/<airport>")
-def register(airport):
+def find(airport):
     user_id = request.headers.get('Authorization')
 
     if user_id is not None and user_exists(user_id):
         r = requests.get(url_search_flight + 'flights/' + airport)
-        return r.content, r.status_code
+        return jsonify(r.json()), r.status_code
     else:
         return jsonify({"error": "Not a valid user!"}), 401
 
