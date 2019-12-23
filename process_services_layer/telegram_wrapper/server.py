@@ -5,6 +5,7 @@ from telegram_functions import init_bot
 
 
 updater = init_bot()
+updater.start_polling()
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ def home():
 
 @app.route("/start", methods=["POST"])
 def start():
-    updater.start_polling()
+    #updater.start_polling()
     return "Bot started!"
 
 @app.route("/stop", methods=["POST"])

@@ -34,6 +34,11 @@ services:
     ports:
     - "5101:80"
 
+  calculate_route_time:
+    build: ./business_services_layer/calculate_route_time
+    ports:
+    - "5102:80"
+
   #adapters layer
 
   route_adapter:
