@@ -12,6 +12,11 @@ services:
     ports:
     - "5001:80"
 
+  flight_finder:
+    build: ./process_services_layer/flight_finder
+    ports:
+    - "5002:80"
+
   #business layer
 
   search_flight:
