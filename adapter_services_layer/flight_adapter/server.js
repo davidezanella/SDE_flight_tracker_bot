@@ -10,7 +10,7 @@ const KEY = process.env.KEY;
 const SECRET = process.env.SECRET;
 
 
-app.get('/flights/:airport', async (req, res) => {
+app.get('/flights/airports/:airport', async (req, res) => {
   let airport = req.params.airport;
 
   let datetime = moment().format('YYYY-MM-DDTHH:mm');
