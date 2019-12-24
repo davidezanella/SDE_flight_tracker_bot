@@ -112,3 +112,18 @@ def init_bot():
     dispatcher.add_handler(unknown_handler)
 
     return updater
+
+
+def send_flight_info(updater, status, chat_id, flight):
+    problem = 'delayed' if status == 'DL' else 'early'
+
+    format_parse = '%Y-%m-%dT%H:%M:%S.%fZ'
+    format_print = '%d/%m/%Y %H:%M'
+    arr_time = datetime.strptime(flight['arrTime'], format_parse)
+    arr_time = arr_time.strftime(format_print)
+
+    msg = "The flight number {} from {} to {} will arrive {} at {}!".format(
+        flight['flightId'], flight['depAirport'], flight['arrAirport'], problem, arr_time
+    )
+
+    updater.bot.send_message(chat_id=chat_id, text=msg)

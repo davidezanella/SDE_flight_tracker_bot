@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 import requests
 import datetime
+import threading, time
 
-from user import user_exists
+from user import user_exists, get_user
 
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ def home():
 url_user_flight = 'http://user-flight_adapter/'
 url_flight = 'http://flight_adapter/'
 url_calculate_route = 'http://calculate_route_time/'
+url_tg_wrapper = 'http://telegram_wrapper/'
 
 
 @app.route("/location", methods=['POST'])
@@ -71,5 +73,42 @@ def location():
         return jsonify({"error": "Not a valid user!"}), 401
 
 
+def check_updates():
+    while True:
+        time.sleep(30)  # Every minute
+
+        r = requests.get(url_user_flight + "flight-users")
+        relations = r.json()
+        for r in relations:
+            r_f = requests.get(url_user_flight + "flight-users/" +r['userId'] +"/"+ r['flightNumber'])
+            result = r_f.json()
+
+            # Just for debug
+            if result['flight']['status'] == 'OT':
+                print('Flight on time', flush=True)
+            elif result['flight']['status'] == 'DL':
+                print('Flight delayed', flush=True)
+            elif result['flight']['status'] == 'FE':
+                print('Flight early', flush=True)
+
+            if result['flight']['status'] in ['DL', 'FE']:
+                data = {
+                    'status': result['flight']['status'],
+                    'chatId': result['user']['chatid'],
+                    'flight': result['flight']
+                }
+                r = requests.post(url_tg_wrapper + 'update', json=data)
+
+
+# FE = Flight Early
+# NI = Next Information
+# OT = Flight On Time
+# DL = Flight Delayed
+# NO = No status
+
+
 if __name__ == "__main__":
+    thread = threading.Thread(target=check_updates)
+    thread.start()
+
     app.run(debug=True, host='0.0.0.0', port=80)

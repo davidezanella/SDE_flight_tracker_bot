@@ -43,12 +43,9 @@ app.get('/flight-users/:userid/:flightnumber', async (req, res) => {
     let userId = req.params.userid;
     let flightNumber = req.params.flightnumber;
 
-    let relation = {
-        'userId': userId,
-        'flightNumber': flightNumber
-    };
+    let found = UF_RELATIONS.filter(x => x.userId === userId && x.flightNumber == flightNumber);
 
-    if (!UF_RELATIONS.includes(relation))
+    if (found.length === 0)
         res.sendStatus(404)
     else {
         //get user and flight info
