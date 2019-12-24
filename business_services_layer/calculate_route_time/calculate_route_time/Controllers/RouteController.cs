@@ -49,8 +49,8 @@ namespace calculate_route_time.Controllers
                 RouteParams rp = new RouteParams() {
                     startLat = p.latitude,
                     startLon = p.longitude,
-                    endLat = airport.latitude,
-                    endLon = airport.longitude-0.003f,
+                    endLat = airport.latitude-0.007f,
+                    endLon = airport.longitude-0.007f,
                     mean = "car"
                 };
 

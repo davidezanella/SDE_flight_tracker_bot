@@ -22,6 +22,11 @@ services:
     ports:
     - "5003:80"
 
+  notificate_user:
+    build: ./process_services_layer/notificate_user
+    ports:
+    - "5004:80"
+
   #business layer
 
   search_flight:

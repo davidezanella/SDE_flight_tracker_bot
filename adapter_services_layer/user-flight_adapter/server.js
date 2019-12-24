@@ -31,6 +31,13 @@ app.post('/flight-users', async (req, res) => {
     }
 });
 
+app.get('/flight-users/:userid', async (req, res) => {
+    let userId = req.params.userid;
+
+    let userRelations = UF_RELATIONS.filter(x => x.userId === userId);
+
+    res.status(200).json(userRelations);    
+});
 
 app.get('/flight-users/:userid/:flightnumber', async (req, res) => {
     let userId = req.params.userid;

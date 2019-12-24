@@ -43,7 +43,7 @@ app.get('/flights/:number', async (req, res) => {
     res.status(200).json(flight);
   }
   catch (e) {
-    res.status(400).json({'err': 'Invalid flight number!'});
+    res.status(404).json({'err': 'Flight not found!'});
   }
 });
 

@@ -6,6 +6,7 @@ from telegram.ext import CommandHandler, Updater, MessageHandler, Filters
 register_user_url = 'http://register_user/register'
 flight_finder_url = 'http://flight_finder/find/'
 track_flight_url = 'http://track_flight/track'
+notificate_user_url = 'http://notificate_user/location'
 
 
 def start(update, context):
@@ -74,7 +75,14 @@ def location(update, context):
     else:
         message = update.message
     lat, lon = message.location.latitude, message.location.longitude
-    print(lat, flush=True)
+    header = { 'Authorization': str(update.message.from_user.id) }
+    data = {
+        'latitude': lat,
+        'longitude': lon
+    }
+    r = requests.post(notificate_user_url, json=data, headers=header)
+    for msg in r.json():
+        context.bot.send_message(parse_mode='Markdown', chat_id=update.effective_chat.id, text=msg)
 
 
 def unknown(update, context):
