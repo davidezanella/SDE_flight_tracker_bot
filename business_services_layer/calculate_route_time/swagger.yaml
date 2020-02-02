@@ -1,0 +1,53 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Calculate route time"
+paths:
+  /route:
+    post:
+      summary: "Calculates the route time and distance from an airport"
+      consumes:
+        - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The parameters of the request.
+        schema:
+          $ref: '#/definitions/Params'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/Result"
+        400:
+          description: "Invalid airport number!"
+
+definitions:
+  Params:
+    type: "object"
+    properties:
+      latitude:
+        description: "Starting latitude"
+        type: "number"
+        format: "float"
+      longitude:
+        description: "Starting longitude"
+        type: "number"
+        format: "float"
+      airport:
+        description: "IATA code of the airport"
+        type: "string"
+  Result:
+    type: "object"
+    properties:
+      distance:
+        type: "number"
+        format: "float"
+        description: "Distance from the airport in meters"
+      duration:
+        type: "number"
+        format: "float"
+        description: "Duration of the movement in seconds"
