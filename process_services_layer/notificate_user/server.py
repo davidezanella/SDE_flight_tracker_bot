@@ -58,22 +58,32 @@ def location():
             r = requests.post(url_calculate_route + 'route', json=data)
             resp = r.json()
             time = datetime.timedelta(seconds=resp['duration'])
-            dist = resp['distance']
+            dist = resp['distance'] / 1000 # Km
 
             depart = timeArr - time
-            depart = depart.strftime('%H:%M')
+            if depart < datetime.datetime.now(): # in case user asks info late
+                depart = 'now'
+            else:
+                depart = depart.strftime('%H:%M')
             time = ':'.join(str(time).split(':')[:2])
 
-
-            msg = "You are {} m far away from the {} airport, you will take {} hours to arrive there.\nYou should depart at {}.".format(dist, destAirport, time, depart)
-            results.append(msg)
+            data = {
+                'distance': dist,
+                'destAirport': destAirport,
+                'timeNeeded': time,
+                'depart': depart
+            }
+            results.append(data)
 
         return jsonify(results), 200
     else:
         return jsonify({"error": "Not a valid user!"}), 401
 
 
+updates = {}
+
 def check_updates():
+    print("launched", flush=True)
     while True:
         time.sleep(60 * 2)  # Every 2 minute
 
@@ -90,14 +100,22 @@ def check_updates():
                 print('Flight {} delayed'.format(r['flightNumber']), flush=True)
             elif result['flight']['status'] == 'FE':
                 print('Flight {} early'.format(r['flightNumber']), flush=True)
+            elif result['flight']['status'] == 'ARR':
+                print('Flight {} arrived'.format(r['flightNumber']), flush=True)
 
-            if result['flight']['status'] in ['DL', 'FE']:
+
+            if result['flight']['status'] in ['DL', 'FE', 'ARR']:
                 data = {
                     'status': result['flight']['status'],
                     'chatId': result['user']['chatid'],
                     'flight': result['flight']
                 }
-                r = requests.post(url_tg_wrapper + 'update', json=data)
+
+                key = r['userId'] + '-' + r['flightNumber']
+                if (key in updates and updates[key] != result['flight']['status']) or key not in updates: # notify only changes of status
+                    updates[key] = result['flight']['status']
+                    r = requests.post(url_tg_wrapper + 'update', json=data)
+
 
 
 # FE = Flight Early
@@ -111,4 +129,4 @@ if __name__ == "__main__":
     thread = threading.Thread(target=check_updates)
     thread.start()
 
-    app.run(debug=True, host='0.0.0.0', port=80)
+    app.run(debug=False, host='0.0.0.0', port=80)

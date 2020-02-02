@@ -84,7 +84,9 @@ def location(update, context):
         'longitude': lon
     }
     r = requests.post(notificate_user_url, json=data, headers=header)
-    for msg in r.json():
+    for data in r.json():
+        msg = "You are {:.2f} km far away from the {} airport, you will take {} hours to arrive there.\nYou should depart at {}.".format(
+            data['distance'], data['destAirport'], data['timeNeeded'], data['depart'])
         context.bot.send_message(parse_mode='Markdown', chat_id=update.effective_chat.id, text=msg)
 
 
@@ -118,15 +120,21 @@ def init_bot():
 
 
 def send_flight_info(updater, status, chat_id, flight):
-    problem = 'delayed' if status == 'DL' else 'early'
-
     format_parse = '%Y-%m-%dT%H:%M:%S.%fZ'
     format_print = '%d/%m/%Y %H:%M'
+
     arr_time = datetime.strptime(flight['arrTime'], format_parse)
     arr_time = arr_time.strftime(format_print)
+    
+    if status in ['DL', 'FE']:
+        problem = 'delayed' if status == 'DL' else 'early'
 
-    msg = "The flight number {} from {} to {} will arrive {} at {}!".format(
-        flight['flightId'], flight['depAirport'], flight['arrAirport'], problem, arr_time
-    )
+        msg = "The flight number {} from {} to {} will arrive {} at {}!".format(
+            flight['flightId'], flight['depAirport'], flight['arrAirport'], problem, arr_time
+        )
+    else:
+        msg = "The flight number {} from {} to {} is arrived at {}!".format(
+            flight['flightId'], flight['depAirport'], flight['arrAirport'], arr_time
+        ) 
 
     updater.bot.send_message(chat_id=chat_id, text=msg)
