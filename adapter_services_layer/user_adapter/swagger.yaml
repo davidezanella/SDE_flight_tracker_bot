@@ -1,0 +1,117 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "User adapter"
+paths:
+  /users:
+    get:
+      summary: "Gets the list of all the users"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+    post:
+      summary: "Creates a new user"
+      consumes:
+      - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The user to create.
+        schema:
+          $ref: '#/definitions/User'
+        required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Missing one or more required parameters!"
+  /users/{userId}:
+    get:
+      summary: "Gets a user"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of the user"
+        required: true
+        type: "number"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "User not found!"
+    put:
+      summary: "Updates a user"
+      consumes:
+      - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The user to create.
+        schema:
+          $ref: '#/definitions/User'
+        required: true      
+      - name: "userId"
+        in: "path"
+        description: "ID of the user"
+        required: true
+        type: "number"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Missing one or more required parameters!"
+    delete:
+      summary: "Deletes a user"
+      produces:
+      - "application/json"
+      parameters:    
+      - name: "userId"
+        in: "path"
+        description: "ID of the user"
+        required: true
+        type: "number"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/User"
+      
+
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        description: "Telegram ID of the user"
+        type: "number"
+      username:
+        description: "Username of the user"
+        type: "string"
+      firstName:
+        description: "Firstname of the user"
+        type: "string"
+      lastName:
+        description: "Lastname of the user"
+        type: "string"
+      chatId:
+        description: "ID of the Telegram chat"
+        type: "number"
