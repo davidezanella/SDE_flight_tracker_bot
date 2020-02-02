@@ -13,7 +13,7 @@ const SECRET = process.env.SECRET;
 app.get('/flights/airports/:airport', async (req, res) => {
   let airport = req.params.airport;
 
-  let datetime = moment().format('YYYY-MM-DDTHH:mm');
+  let datetime = moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm');
 
   let access_token = await lh_api.getAccessToken(KEY, SECRET);
   try {
