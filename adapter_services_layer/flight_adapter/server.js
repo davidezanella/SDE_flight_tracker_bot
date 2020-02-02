@@ -73,6 +73,9 @@ function formatLhFlight(flight) {
   let flightId = flight.OperatingCarrier.AirlineID + flight.OperatingCarrier.FlightNumber;
   let depTime = moment.utc(flight.Departure.ScheduledTimeUTC.DateTime).add(1, 'hours').toDate();
   let arrTime = moment.utc(flight.Arrival.ScheduledTimeUTC.DateTime).add(1, 'hours').toDate();
+  let now = moment().add(1, 'hours').toDate()
+  if(arrTime < now)
+    status = 'ARR';
   return {
     'depAirport': flight.Departure.AirportCode,
     'arrAirport': flight.Arrival.AirportCode,
