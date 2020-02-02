@@ -34,16 +34,19 @@ def find_by_arr_airport(update, context):
         r = requests.get(flight_finder_url + airport, headers=header)
         if r.status_code == 200:
             flights = r.json()
-            msg = "Flights found:\n\n"
-            format_parse = '%Y-%m-%dT%H:%M:%SZ'
-            format_print = '%d/%m/%Y %H:%M'
-            for f in flights:
-                dep_time = datetime.strptime(f['depTime'], format_parse)
-                dep_time = dep_time.strftime(format_print)
-                arr_time = datetime.strptime(f['arrTime'], format_parse)
-                arr_time = arr_time.strftime(format_print)
-                msg += "From:\n\t\t\U0001F6EB {}\n\t\t\U0001F4C5 {}\nTo:\n\t\t\U0001F6EC {}\n\t\t\U0001F4C5 {}\nFlight ID: \U0000FE0F `{}`\n\n".format(
-                    f['depAirport'], dep_time, f['arrAirport'], arr_time, f['flightId'])
+            if(len(flights) > 0):
+                msg = "Flights found:\n\n"
+                format_parse = '%Y-%m-%dT%H:%M:%SZ'
+                format_print = '%d/%m/%Y %H:%M'
+                for f in flights:
+                    dep_time = datetime.strptime(f['depTime'], format_parse)
+                    dep_time = dep_time.strftime(format_print)
+                    arr_time = datetime.strptime(f['arrTime'], format_parse)
+                    arr_time = arr_time.strftime(format_print)
+                    msg += "From:\n\t\t\U0001F6EB {}\n\t\t\U0001F4C5 {}\nTo:\n\t\t\U0001F6EC {}\n\t\t\U0001F4C5 {}\nFlight ID: \U0000FE0F `{}`\n\n".format(
+                        f['depAirport'], dep_time, f['arrAirport'], arr_time, f['flightId'])
+            else:
+                msg = "No flights found!"
         else:
             msg = "Invalid airport code!"
 
