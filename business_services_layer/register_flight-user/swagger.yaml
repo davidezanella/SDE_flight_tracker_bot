@@ -1,0 +1,35 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Register flight-user"
+paths:
+  /route:
+    post:
+      summary: "Register a flight-user relation"
+      consumes:
+      - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The parameters of the request.
+        schema:
+          $ref: '#/definitions/Params'
+        required: true
+      responses:
+        201:
+          description: "Created"
+        400:
+          description: "Invalid flight number!"
+
+definitions:
+  Params:
+    type: "object"
+    properties:
+      userId:
+        description: "ID of the user"
+        type: "number"
+      flightNumber:
+        description: "Number of the flight"
+        type: "string"
