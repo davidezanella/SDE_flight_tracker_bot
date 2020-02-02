@@ -41,9 +41,9 @@ def location():
         relations = r.json()
 
         results = []
-        for r in relations:
+        for rel in relations:
             #get flight destAirport
-            r = requests.get(url_flight + "flights/" + r['flightNumber'])
+            r = requests.get(url_flight + "flights/" + rel['flightNumber'])
             res = r.json()
             destAirport = res['arrAirport']
             format_parse = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -62,10 +62,10 @@ def location():
 
             depart = timeArr - time
             depart = depart.strftime('%H:%M')
-            time = time.strftime('%H:%M')
+            time = ':'.join(str(time).split(':')[:2])
 
 
-            msg = "You are {} m far away from the {} airport, you will take {} hours to arrive there.\nYou whould depart at {}.".format(dist, destAirport, time, depart)
+            msg = "You are {} m far away from the {} airport, you will take {} hours to arrive there.\nYou should depart at {}.".format(dist, destAirport, time, depart)
             results.append(msg)
 
         return jsonify(results), 200
@@ -75,7 +75,7 @@ def location():
 
 def check_updates():
     while True:
-        time.sleep(30)  # Every minute
+        time.sleep(60 * 2)  # Every 2 minute
 
         r = requests.get(url_user_flight + "flight-users")
         relations = r.json()
@@ -85,11 +85,11 @@ def check_updates():
 
             # Just for debug
             if result['flight']['status'] == 'OT':
-                print('Flight on time', flush=True)
+                print('Flight {} on time'.format(r['flightNumber']), flush=True)
             elif result['flight']['status'] == 'DL':
-                print('Flight delayed', flush=True)
+                print('Flight {} delayed'.format(r['flightNumber']), flush=True)
             elif result['flight']['status'] == 'FE':
-                print('Flight early', flush=True)
+                print('Flight {} early'.format(r['flightNumber']), flush=True)
 
             if result['flight']['status'] in ['DL', 'FE']:
                 data = {
