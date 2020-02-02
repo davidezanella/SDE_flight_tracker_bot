@@ -1,0 +1,106 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Flight adapter"
+paths:
+  /flights/airports/{airportCode}:
+    get:
+      summary: "Finds the flights arriving at a specific destination airport"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "airportCode"
+        in: "path"
+        description: "IATA code of the destination airport"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Flight"
+        400:
+          description: "Invalid airport number!"
+  /flights/{flightId}:
+    get:
+      summary: "Get information about a flight"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "flightId"
+        in: "path"
+        description: "ID of the flight"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/Flight"
+        404:
+          description: "Flight not found!"
+  /airports/{airportCode}:
+    get:
+      summary: "Get information about an airport"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "airportCode"
+        in: "path"
+        description: "IATA code of an airport"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/Airport"
+        404:
+          description: "Airport not found!"
+
+definitions:
+  Flight:
+    type: "object"
+    properties:
+      flightId:
+        type: "string"
+        description: "ID of the flight"
+      depAirport:
+        description: "IATA code of the departure airport"
+        type: "string"
+      arrAirport:
+        description: "IATA code of the arrival airport"
+        type: "string"
+      depTime:
+        description: "Time of the departure"
+        type: "string"
+        format: "date-time"
+      arrTime:
+        description: "Time of the arrival"
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Status of the flight"
+        enum:
+        - "FE"
+        - "OT"
+        - "DL"
+        - "NO"
+        - "ARR"
+  Airport:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the airport"
+      latitude:
+        type: "number"
+        format: "float"
+        description: "The latitude of the airport"
+      longitude:
+        type: "number"
+        format: "float"
+        description: "The longitude of the airport"
