@@ -1,0 +1,44 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Register user"
+paths:
+  /register:
+    post:
+      summary: "Registers or updates a user"
+      consumes:
+        - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The user to register.
+        schema:
+          $ref: '#/definitions/User'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Error in the parameters"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        description: "Telegram ID of the user"
+        type: "number"
+      username:
+        description: "Username of the user"
+        type: "string"
+      firstName:
+        description: "Firstname of the user"
+        type: "string"
+      lastName:
+        description: "Lastname of the user"
+        type: "string"
+      chatId:
+        description: "ID of the Telegram chat"
+        type: "number"
