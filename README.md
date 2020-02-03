@@ -4,6 +4,8 @@ Project for the SDE course at UniTN 2019.
 
 This project is a microservice architecture that implements a Telegram bot capable to track flights and notify you about them.
 
+The PDF report of this project can be found in the main folder of the project.
+
 ## Project structure
 ![Schema](schema.png)
 
@@ -29,7 +31,4 @@ Process layer:
 - [Register user](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/davidezanella/SDE_flight_tracker_bot/master/process_services_layer/register_user/swagger.yaml)
 - [Track flight](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/davidezanella/SDE_flight_tracker_bot/master/process_services_layer/track_flight/swagger.yaml)
 - [Notificate user](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/davidezanella/SDE_flight_tracker_bot/master/process_services_layer/notificate_user/swagger.yaml)
-
-
-
 - [Telegram wrapper](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/davidezanella/SDE_flight_tracker_bot/master/process_services_layer/telegram_wrapper/swagger.yaml)
