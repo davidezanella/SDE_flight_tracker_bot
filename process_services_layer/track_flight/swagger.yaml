@@ -1,0 +1,43 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Track flight"
+paths:
+  /track:
+    post:
+      summary: "Track a flight"
+      consumes:
+        - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The user to register.
+        schema:
+          $ref: '#/definitions/Param'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Mandatory field 'flightNumber' not present!"
+        401:
+          description: "Not a valid user!"
+
+definitions:
+  Param:
+    type: "object"
+    properties:
+      flightNumber:
+        type: "string"
+        description: "ID of the flight"
+
+securityDefinitions:
+  UserAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+
+security:
+- UserAuth: []
