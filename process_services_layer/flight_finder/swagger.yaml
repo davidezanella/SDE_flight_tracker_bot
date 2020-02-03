@@ -1,0 +1,65 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Flight finder"
+paths:
+  /find/{destAirport}:
+    get:
+      summary: "Search the flights arriving to a specific airport"
+      produces:
+      - "application/json"
+      parameters:
+      - in: path
+        name: destAirport
+        description: IATA code of the destination airport
+        type: "string" 
+        required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Flight"
+        401:
+          description: "Not a valid user!"
+
+definitions:
+  Flight:
+    type: "object"
+    properties:
+      flightId:
+        type: "string"
+        description: "ID of the flight"
+      depAirport:
+        description: "IATA code of the departure airport"
+        type: "string"
+      arrAirport:
+        description: "IATA code of the arrival airport"
+        type: "string"
+      depTime:
+        description: "Time of the departure"
+        type: "string"
+        format: "date-time"
+      arrTime:
+        description: "Time of the arrival"
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Status of the flight"
+        enum:
+        - "FE"
+        - "OT"
+        - "DL"
+        - "NO"
+        - "ARR"
+
+securityDefinitions:
+  UserAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+
+security:
+- UserAuth: []
