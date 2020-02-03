@@ -1,0 +1,51 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Telegram wrapper"
+paths:
+  /start:
+    post:
+      summary: "Start the telegram bot"
+      responses:
+        200:
+          description: "Bot started!"
+
+  /stop:
+    post:
+      summary: "Stop the Telegram bot"
+      responses:
+        200:
+          description: "Bot stopped!"
+
+  /update:
+    post:
+      summary: "Notify a Telegram user about some news of the flight"
+      consumes:
+      - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The parameters.
+        schema:
+          $ref: '#/definitions/Param'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Mandatory field not present!"
+
+definitions:
+  Param:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        description: "Status of the flight"
+      chatId:
+        type: "number"
+        description: "ID of the Telegram chat"
+      flight:
+        description: "Details of the flight"

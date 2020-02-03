@@ -13,7 +13,7 @@ paths:
       parameters:
       - in: body
         name: params
-        description: The user to register.
+        description: The position of the user.
         schema:
           $ref: '#/definitions/Param'
         required: true
