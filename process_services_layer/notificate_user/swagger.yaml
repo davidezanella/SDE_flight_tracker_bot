@@ -1,0 +1,63 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Notificate user"
+paths:
+  /location:
+    post:
+      summary: "Gets info about the trip to the airport given the position of the user"
+      consumes:
+        - application/json
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: params
+        description: The user to register.
+        schema:
+          $ref: '#/definitions/Param'
+        required: true
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Mandatory field not present!"
+        401:
+          description: "Not a valid user!"
+
+definitions:
+  Param:
+    type: "object"
+    properties:
+      latitude:
+        type: "number"
+        format: "float"
+        description: "Latitude of the user"
+      longitude:
+        type: "number"
+        format: "float"
+        description: "Longitude of the user"
+  Result:
+    type: "object"
+    properties:
+      distance:
+        type: "number"
+        description: "Distance in km"
+      destAirport:
+        type: "string"
+        description: "IATA code of the destination airport"
+      timeNeeded:
+        type: "string"
+        description: "Time needed to arrive at the airport"
+      depart:
+        type: "string"
+        description: "Time when the user should depart"
+
+securityDefinitions:
+  UserAuth:
+    type: apiKey
+    in: header
+    name: Authorization
+
+security:
+- UserAuth: []
